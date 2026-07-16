@@ -280,11 +280,54 @@ function initGameControls() {
     });
   }
 
-  const hostBtn = document.getElementById("btn-host-room");
-  if (hostBtn) hostBtn.addEventListener("click", hostOnlineRoom);
+  // Setup panel choices toggling logic
+  const createChoiceBtn = document.getElementById("btn-create-room-choice");
+  if (createChoiceBtn) {
+    createChoiceBtn.addEventListener("click", () => {
+      const choiceContainer = document.getElementById("online-choice-container");
+      const hostContainer = document.getElementById("online-host-container");
+      if (choiceContainer) choiceContainer.style.display = "none";
+      if (hostContainer) hostContainer.style.display = "flex";
+      hostOnlineRoom();
+    });
+  }
 
-  const joinBtn = document.getElementById("btn-join-room");
-  if (joinBtn) joinBtn.addEventListener("click", joinOnlineRoom);
+  const joinChoiceBtn = document.getElementById("btn-join-room-choice");
+  if (joinChoiceBtn) {
+    joinChoiceBtn.addEventListener("click", () => {
+      const choiceContainer = document.getElementById("online-choice-container");
+      const joinContainer = document.getElementById("online-join-container");
+      if (choiceContainer) choiceContainer.style.display = "none";
+      if (joinContainer) joinContainer.style.display = "flex";
+      updateOnlineStatus("Enter 6-digit room code to join.");
+    });
+  }
+
+  const cancelHostBtn = document.getElementById("btn-cancel-host");
+  if (cancelHostBtn) {
+    cancelHostBtn.addEventListener("click", () => {
+      leaveOnlineRoom();
+    });
+  }
+
+  const backChoicesBtn = document.getElementById("btn-back-to-choices");
+  if (backChoicesBtn) {
+    backChoicesBtn.addEventListener("click", () => {
+      const choiceContainer = document.getElementById("online-choice-container");
+      const joinContainer = document.getElementById("online-join-container");
+      if (choiceContainer) choiceContainer.style.display = "flex";
+      if (joinContainer) joinContainer.style.display = "none";
+      
+      const codeInput = document.getElementById("room-code-input");
+      if (codeInput) codeInput.value = "";
+      updateOnlineStatus("");
+    });
+  }
+
+  const submitJoinBtn = document.getElementById("btn-submit-join");
+  if (submitJoinBtn) {
+    submitJoinBtn.addEventListener("click", joinOnlineRoom);
+  }
 }
 
 // Show/Hide bottom buttons dynamically based on match status
@@ -614,6 +657,10 @@ function hostOnlineRoom() {
 
   updateOnlineStatus("Creating lobby...");
 
+  // Update room code on Host UI display
+  const codeDisplay = document.getElementById("display-room-code");
+  if (codeDisplay) codeDisplay.textContent = code;
+
   const roomData = {
     roomId: code,
     playerXName: nickname,
@@ -634,7 +681,7 @@ function hostOnlineRoom() {
 
   roomRef = database.ref("rooms/" + code);
   roomRef.set(roomData).then(() => {
-    updateOnlineStatus(`Lobby Code: ${code}`);
+    updateOnlineStatus(`Lobby Hosted! Code: ${code}`);
     roomRef.on("value", handleOnlineRoomUpdate);
     configureActionButtonsUI();
   }).catch((e) => {
@@ -874,6 +921,20 @@ function leaveOnlineRoomQuietly() {
   isOnlineMatch = false;
   rematchRequested = false;
   updateOnlineStatus("");
+
+  // Restore choices layout
+  const choiceContainer = document.getElementById("online-choice-container");
+  const hostContainer = document.getElementById("online-host-container");
+  const joinContainer = document.getElementById("online-join-container");
+  if (choiceContainer) choiceContainer.style.display = "flex";
+  if (hostContainer) hostContainer.style.display = "none";
+  if (joinContainer) joinContainer.style.display = "none";
+
+  const codeDisplay = document.getElementById("display-room-code");
+  if (codeDisplay) codeDisplay.textContent = "------";
+
+  const codeInput = document.getElementById("room-code-input");
+  if (codeInput) codeInput.value = "";
 }
 
 function disconnectFromOnlineRoom() {

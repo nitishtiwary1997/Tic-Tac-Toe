@@ -149,15 +149,34 @@
 
             <!-- Online Room Setup Panel (Hidden by default) -->
             <div id="online-setup-panel" class="online-panel" style="display: none;">
-              <strong style="font-size: 0.9rem; color: var(--color-primary); display: block; margin-bottom: 4px;">Online Multiplayer Room</strong>
-              <div style="display: flex; gap: 10px;">
-                <input type="text" id="room-code-input" class="room-input" placeholder="6-Digit Room Code" maxlength="6">
+              <strong style="font-size: 0.95rem; color: var(--color-primary); display: block; margin-bottom: 8px;">Online Multiplayer</strong>
+              
+              <!-- Initial Selection Buttons -->
+              <div id="online-choice-container" style="display: flex; flex-direction: column; gap: 10px; width: 100%;">
+                <button id="btn-create-room-choice" class="btn-small active" style="padding: 12px; font-size: 0.95rem;">Create Room (Host Lobby)</button>
+                <button id="btn-join-room-choice" class="btn-small" style="padding: 12px; font-size: 0.95rem; opacity: 0.8;">Join Room (Enter Code)</button>
               </div>
-              <div style="display: flex; gap: 10px; width: 100%; margin-top: 8px;">
-                <button id="btn-host-room" class="btn-small" style="flex: 1; padding: 10px;">Host Room</button>
-                <button id="btn-join-room" class="btn-small" style="flex: 1; padding: 10px;">Join Room</button>
+
+              <!-- Host Room UI (Active when Hosting) -->
+              <div id="online-host-container" style="display: none; flex-direction: column; gap: 12px; width: 100%; text-align: center;">
+                <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--surface-border); border-radius: 12px; padding: 15px;">
+                  <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Share this code:</span>
+                  <div id="display-room-code" style="font-size: 2.2rem; font-weight: 700; font-family: 'Space Grotesk', sans-serif; color: var(--color-primary); margin-top: 5px; letter-spacing: 0.05em;">------</div>
+                </div>
+                <button id="btn-cancel-host" class="btn-small" style="opacity: 0.7;">Cancel Lobby</button>
               </div>
-              <div id="online-room-status" style="font-size: 0.85rem; color: var(--text-muted); text-align: center; margin-top: 8px; font-weight: 500;"></div>
+
+              <!-- Join Room UI (Active when Joining) -->
+              <div id="online-join-container" style="display: none; flex-direction: column; gap: 12px; width: 100%;">
+                <input type="text" id="room-code-input" class="room-input" placeholder="Enter 6-Digit Code" maxlength="6">
+                <div style="display: flex; gap: 10px; width: 100%;">
+                  <button id="btn-submit-join" class="btn-small active" style="flex: 1; padding: 12px; background: var(--color-secondary); border-color: var(--color-secondary); box-shadow: var(--glow-shadow-secondary);">Join Game</button>
+                  <button id="btn-back-to-choices" class="btn-small" style="flex: 0.5; padding: 12px;">Back</button>
+                </div>
+              </div>
+
+              <!-- Status message label -->
+              <div id="online-room-status" style="font-size: 0.85rem; color: var(--text-muted); text-align: center; margin-top: 5px; font-weight: 500;"></div>
             </div>
 
             <div id="difficulty-container" style="margin-top: 15px;">
