@@ -793,6 +793,11 @@ function handleOnlineRoomUpdate(snapshot) {
     isGameActive = true;
     rematchRequested = false;
 
+    const strikeLine = document.getElementById("winning-strike-line");
+    if (strikeLine) {
+      strikeLine.className = "mock-line";
+    }
+
     // Check X or O turn
     if (currentTurn === playerSymbol) {
       updateGameStatusMessage(`Your turn (${playerSymbol})! Make a move.`);
@@ -939,4 +944,11 @@ function leaveOnlineRoomQuietly() {
 
 function disconnectFromOnlineRoom() {
   leaveOnlineRoomQuietly();
+}
+
+function updateOnlineStatus(msg) {
+  const statusLabel = document.getElementById("online-room-status");
+  if (statusLabel) {
+    statusLabel.textContent = msg;
+  }
 }
