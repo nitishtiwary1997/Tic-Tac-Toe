@@ -123,8 +123,13 @@
             </div>
 
             <div class="nickname-input-wrapper">
-              <label for="player-nickname" style="font-size: 0.9rem; color: var(--text-muted); font-weight: 500;">Set Nickname:</label>
+              <label id="label-player-x" for="player-nickname" style="font-size: 0.9rem; color: var(--text-muted); font-weight: 500;">Set Nickname:</label>
               <input type="text" id="player-nickname" class="nickname-input" placeholder="Enter nickname..." value="Player 1">
+            </div>
+
+            <div id="player-o-input-wrapper" class="nickname-input-wrapper" style="display: none;">
+              <label for="player-o-nickname" style="font-size: 0.9rem; color: var(--text-muted); font-weight: 500;">Player O Nickname:</label>
+              <input type="text" id="player-o-nickname" class="nickname-input" placeholder="Enter player O nickname..." value="Player 2">
             </div>
           </div>
 
@@ -229,6 +234,8 @@
             <!-- Actions -->
             <div class="game-actions-wrapper">
               <button id="btn-reset-game" class="btn-small">Reset Board</button>
+              <button id="btn-rematch-online" class="btn-small active" style="display: none; background: var(--color-secondary); border-color: var(--color-secondary); box-shadow: var(--glow-shadow-secondary);">Request Rematch</button>
+              <button id="btn-leave-room" class="btn-small" style="display: none; opacity: 0.7;">Leave Room</button>
               <button id="btn-reset-stats" class="btn-small" style="opacity: 0.7;">Reset Stats</button>
             </div>
           </div>

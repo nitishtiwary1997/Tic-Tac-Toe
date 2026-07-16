@@ -1,6 +1,7 @@
 // Game State variables
 let activeTheme = 1;
 let nickname = "Player 1";
+let nicknameO = "Player 2";
 let avatar = "🦊";
 let gameMode = "ai"; // "ai", "local", or "online"
 let aiDifficulty = "hard"; // "easy" or "hard"
@@ -16,6 +17,8 @@ let onlineRoomId = "";
 let playerSymbol = "X"; // "X" (Host) or "O" (Joiner)
 let isOnlineMatch = false;
 let roomRef = null;
+let currentRound = 1;
+let rematchRequested = false;
 
 // Firebase configuration (from google-services.json)
 const firebaseConfig = {
@@ -158,6 +161,13 @@ function initNicknameInput() {
       nickname = e.target.value.trim() || "Player 1";
     });
   }
+
+  const inputO = document.getElementById("player-o-nickname");
+  if (inputO) {
+    inputO.addEventListener("input", (e) => {
+      nicknameO = e.target.value.trim() || "Player 2";
+    });
+  }
 }
 
 // 4. Game Controls
@@ -173,22 +183,37 @@ function initGameControls() {
       const difficultyContainer = document.getElementById("difficulty-container");
       const coinTossCard = document.querySelector(".coin-toss-wrapper");
 
-      // Show/Hide UI elements
+      // Configure layout visibility
       if (onlineSetupPanel) {
         onlineSetupPanel.style.display = gameMode === "online" ? "flex" : "none";
       }
       if (difficultyContainer) {
         difficultyContainer.style.display = gameMode === "ai" ? "block" : "none";
       }
-      if (coinTossCard) {
-        coinTossCard.style.display = "flex";
+
+      const playerOWrapper = document.getElementById("player-o-input-wrapper");
+      const labelX = document.getElementById("label-player-x");
+
+      if (gameMode === "local") {
+        if (playerOWrapper) playerOWrapper.style.display = "block";
+        if (labelX) labelX.textContent = "Player X Nickname:";
+      } else {
+        if (playerOWrapper) playerOWrapper.style.display = "none";
+        if (labelX) labelX.textContent = gameMode === "online" ? "Your Nickname:" : "Set Nickname:";
+      }
+
+      if (gameMode === "online") {
+        if (coinTossCard) coinTossCard.style.display = "none"; // Hide coin flip completely for online room
+      } else {
+        if (coinTossCard) coinTossCard.style.display = "flex";
       }
 
       disconnectFromOnlineRoom();
       resetGameEngine(true);
+      configureActionButtonsUI();
 
       if (gameMode === "online") {
-        updateGameStatusMessage("Online Mode selected. Host a new room or join an existing one.");
+        updateGameStatusMessage("Online Mode. Host a new room or join an existing one.");
       } else {
         updateGameStatusMessage(`Mode set: ${gameMode === "ai" ? "Player vs AI" : "Local Pass & Play"}. Toss to start!`);
       }
@@ -206,40 +231,87 @@ function initGameControls() {
     });
   });
 
-  // Action buttons
+  // Action Buttons
   const resetBtn = document.getElementById("btn-reset-game");
   if (resetBtn) {
     resetBtn.addEventListener("click", () => {
-      if (gameMode === "online") {
-        resetOnlineRoom();
-      } else {
-        resetGameEngine(false);
-      }
+      resetGameEngine(false);
+    });
+  }
+
+  const rematchBtn = document.getElementById("btn-rematch-online");
+  if (rematchBtn) {
+    rematchBtn.addEventListener("click", requestOnlineRematch);
+  }
+
+  const leaveBtn = document.getElementById("btn-leave-room");
+  if (leaveBtn) {
+    leaveBtn.addEventListener("click", () => {
+      leaveOnlineRoom();
+      gameMode = "ai";
+      
+      // Update UI active states back to AI mode
+      modeButtons.forEach((b) => b.classList.remove("active"));
+      const aiBtn = document.querySelector('[data-mode="ai"]');
+      if (aiBtn) aiBtn.classList.add("active");
+
+      const onlineSetupPanel = document.getElementById("online-setup-panel");
+      const difficultyContainer = document.getElementById("difficulty-container");
+      const coinTossCard = document.querySelector(".coin-toss-wrapper");
+      
+      if (onlineSetupPanel) onlineSetupPanel.style.display = "none";
+      if (difficultyContainer) difficultyContainer.style.display = "block";
+      if (coinTossCard) coinTossCard.style.display = "flex";
+
+      resetGameEngine(true);
+      configureActionButtonsUI();
+      updateGameStatusMessage("Left lobby. Mode set back to Player vs AI.");
     });
   }
 
   const resetStatsBtn = document.getElementById("btn-reset-stats");
   if (resetStatsBtn) {
     resetStatsBtn.addEventListener("click", () => {
-      if (gameMode === "online" && roomRef) {
-        roomRef.update({ scoreX: 0, scoreO: 0, drawsCount: 0 });
-      } else {
-        stats = { wins: 0, losses: 0, draws: 0 };
-        updateStatsUI();
+      stats = { wins: 0, losses: 0, draws: 0 };
+      updateStatsUI();
+      if (gameMode !== "online") {
         resetGameEngine(false);
       }
     });
   }
 
-  // Host and Join Button Handlers
   const hostBtn = document.getElementById("btn-host-room");
-  if (hostBtn) {
-    hostBtn.addEventListener("click", hostOnlineRoom);
-  }
+  if (hostBtn) hostBtn.addEventListener("click", hostOnlineRoom);
 
   const joinBtn = document.getElementById("btn-join-room");
-  if (joinBtn) {
-    joinBtn.addEventListener("click", joinOnlineRoom);
+  if (joinBtn) joinBtn.addEventListener("click", joinOnlineRoom);
+}
+
+// Show/Hide bottom buttons dynamically based on match status
+function configureActionButtonsUI() {
+  const resetBtn = document.getElementById("btn-reset-game");
+  const rematchBtn = document.getElementById("btn-rematch-online");
+  const leaveBtn = document.getElementById("btn-leave-room");
+  const resetStatsBtn = document.getElementById("btn-reset-stats");
+
+  if (gameMode === "online") {
+    if (resetBtn) resetBtn.style.display = "none";
+    if (leaveBtn) leaveBtn.style.display = "inline-block";
+    
+    if (isOnlineMatch && !isGameActive && boardState.some(c => c !== "")) {
+      // Game ended in Online Match
+      if (rematchBtn) {
+        rematchBtn.style.display = "inline-block";
+        rematchBtn.disabled = rematchRequested;
+        rematchBtn.textContent = rematchRequested ? "Waiting for Opponent..." : "Request Rematch";
+      }
+    } else {
+      if (rematchBtn) rematchBtn.style.display = "none";
+    }
+  } else {
+    if (resetBtn) resetBtn.style.display = "inline-block";
+    if (rematchBtn) rematchBtn.style.display = "none";
+    if (leaveBtn) leaveBtn.style.display = "none";
   }
 }
 
@@ -254,7 +326,6 @@ function initCoinToss() {
     tossBtn.disabled = true;
     updateGameStatusMessage("Flipping coin...");
 
-    // Generate result: 0 = Heads (X goes first), 1 = Tails (O goes first)
     const result = Math.floor(Math.random() * 2);
     
     coin.className = "coin";
@@ -270,44 +341,32 @@ function initCoinToss() {
 
     setTimeout(() => {
       tossBtn.disabled = false;
-      
-      if (gameMode === "online") {
-        if (playerSymbol === "X" && roomRef) {
-          // Sync online start turn to database
-          roomRef.update({
-            currentTurn: firstPlayer,
-            status: "ACTIVE",
-            board: Array(9).fill("EMPTY")
-          });
-        }
+      isGameActive = true;
+      currentTurn = firstPlayer;
+      boardState = Array(9).fill("");
+      renderBoardUI();
+
+      const strikeLine = document.getElementById("winning-strike-line");
+      if (strikeLine) strikeLine.className = "mock-line";
+
+      if (firstPlayer === "X") {
+        updateGameStatusMessage(`${avatar} ${nickname} (X) won the toss! Play first move.`);
+        enableCells(true);
       } else {
-        isGameActive = true;
-        currentTurn = firstPlayer;
-        boardState = Array(9).fill("");
-        renderBoardUI();
-
-        const strikeLine = document.getElementById("winning-strike-line");
-        if (strikeLine) strikeLine.className = "mock-line";
-
-        if (firstPlayer === "X") {
-          updateGameStatusMessage(`${avatar} ${nickname} (X) won the toss! Play first move.`);
-          enableCells(true);
+        if (gameMode === "ai") {
+          updateGameStatusMessage(`AI (O) won the toss and plays first!`);
+          enableCells(false);
+          setTimeout(makeAIMove, 1000);
         } else {
-          if (gameMode === "ai") {
-            updateGameStatusMessage(`AI (O) won the toss and plays first!`);
-            enableCells(false);
-            setTimeout(makeAIMove, 1000);
-          } else {
-            updateGameStatusMessage(`Player O won the toss and plays first!`);
-            enableCells(true);
-          }
+          updateGameStatusMessage(`Player O (${nicknameO}) won the toss and plays first!`);
+          enableCells(true);
         }
       }
     }, 2000);
   });
 }
 
-// 6. Game Board clicks
+// 6. Game Board
 function initGameBoard() {
   const cells = document.querySelectorAll(".mock-cell");
   cells.forEach((cell, index) => {
@@ -315,7 +374,7 @@ function initGameBoard() {
       if (!isGameActive || boardState[index] !== "") return;
       
       if (gameMode === "online") {
-        if (currentTurn !== playerSymbol) return; // Block clicking if it's opponent's turn
+        if (currentTurn !== playerSymbol) return; // Block clicking if not our turn
         makeOnlineMove(index);
       } else {
         if (gameMode === "ai" && currentTurn === "O") return;
@@ -325,7 +384,7 @@ function initGameBoard() {
   });
 }
 
-// Make local move
+// Make a local move
 function makeMove(index, player) {
   boardState[index] = player;
   renderBoardUI();
@@ -347,14 +406,14 @@ function makeMove(index, player) {
       enableCells(false);
       setTimeout(makeAIMove, 800);
     } else {
-      const activeName = currentTurn === "X" ? `${avatar} ${nickname}` : "Player O";
+      const activeName = currentTurn === "X" ? `${avatar} ${nickname}` : `⭕ ${nicknameO}`;
       updateGameStatusMessage(`${activeName}'s turn (${currentTurn})`);
       enableCells(true);
     }
   }
 }
 
-// AI Turn logic
+// AI Turn Engine
 function makeAIMove() {
   if (!isGameActive) return;
 
@@ -440,7 +499,7 @@ function handleGameOver(result, winningCombination = null) {
         updateGameStatusMessage(`🤖 AI wins! Better luck next time.`);
         stats.losses++;
       } else {
-        updateGameStatusMessage(`🎉 Player O wins!`);
+        updateGameStatusMessage(`🎉 ⭕ ${nicknameO} wins!`);
         stats.losses++;
       }
     }
@@ -451,17 +510,13 @@ function handleGameOver(result, winningCombination = null) {
 
   updateStatsUI();
 
-  // Auto-reset board after 3 seconds
-  if (gameMode === "online") {
-    if (playerSymbol === "X" && roomRef) {
-      setTimeout(() => {
-        resetOnlineRoom();
-      }, 3500);
-    }
-  } else {
+  // Reset board after 3 seconds for local/AI modes ONLY
+  if (gameMode !== "online") {
     setTimeout(() => {
       resetGameEngine(false);
     }, 3000);
+  } else {
+    configureActionButtonsUI(); // Show "Request Rematch" button for online mode
   }
 }
 
@@ -521,6 +576,7 @@ function resetGameEngine(isFullReset) {
   isGameActive = false;
   boardState = Array(9).fill("");
   currentTurn = "X";
+  rematchRequested = false;
   
   renderBoardUI();
   enableCells(false);
@@ -541,12 +597,12 @@ function resetGameEngine(isFullReset) {
 }
 
 /* ==========================================================================
-   Online Room Logic (RTDB Sync)
+   Online Room Logic (RTDB Sync Matching Android App Flow)
    ========================================================================== */
 
 function hostOnlineRoom() {
   if (!database) {
-    updateOnlineStatus("Firebase not initialized! Verify configs.");
+    updateOnlineStatus("Firebase not initialized!");
     return;
   }
 
@@ -556,14 +612,14 @@ function hostOnlineRoom() {
   playerSymbol = "X";
   isOnlineMatch = true;
 
-  updateOnlineStatus("Creating room...");
+  updateOnlineStatus("Creating lobby...");
 
   const roomData = {
     roomId: code,
     playerXName: nickname,
     playerXAvatarId: avatar,
     playerOName: "",
-    playerOAvatarId: "",
+    playerOAvatarId: "avatar_2", // Matches app defaults
     board: Array(9).fill("EMPTY"),
     currentTurn: "X",
     status: "WAITING",
@@ -578,18 +634,11 @@ function hostOnlineRoom() {
 
   roomRef = database.ref("rooms/" + code);
   roomRef.set(roomData).then(() => {
-    updateOnlineStatus(`Room Created! Code: ${code}`);
+    updateOnlineStatus(`Lobby Code: ${code}`);
     roomRef.on("value", handleOnlineRoomUpdate);
-    
-    // Show coin toss for host to flip once someone joins
-    const coinTossCard = document.querySelector(".coin-toss-wrapper");
-    if (coinTossCard) {
-      coinTossCard.style.display = "flex";
-      const tossBtn = document.getElementById("btn-toss-coin");
-      if (tossBtn) tossBtn.disabled = true; // Disabled until player joins
-    }
+    configureActionButtonsUI();
   }).catch((e) => {
-    updateOnlineStatus("Error creating room: " + e.message);
+    updateOnlineStatus("Error: " + e.message);
   });
 }
 
@@ -603,12 +652,12 @@ function joinOnlineRoom() {
   const code = codeInput ? codeInput.value.trim() : "";
 
   if (code.length !== 6 || isNaN(code)) {
-    updateOnlineStatus("Please enter a valid 6-digit code.");
+    updateOnlineStatus("Enter valid 6-digit code.");
     return;
   }
 
   disconnectFromOnlineRoom();
-  updateOnlineStatus(`Connecting to room ${code}...`);
+  updateOnlineStatus(`Joining room ${code}...`);
 
   const targetRoomRef = database.ref("rooms/" + code);
   targetRoomRef.once("value").then((snapshot) => {
@@ -619,7 +668,7 @@ function joinOnlineRoom() {
 
     const room = snapshot.val();
     if (room.status !== "WAITING") {
-      updateOnlineStatus("Room is already active, full, or completed.");
+      updateOnlineStatus("Room is already full/active.");
       return;
     }
 
@@ -627,7 +676,7 @@ function joinOnlineRoom() {
     playerSymbol = "O";
     isOnlineMatch = true;
 
-    // Join room
+    // Join room in Firebase
     targetRoomRef.update({
       playerOName: nickname,
       playerOAvatarId: avatar,
@@ -635,31 +684,33 @@ function joinOnlineRoom() {
     }).then(() => {
       roomRef = targetRoomRef;
       roomRef.on("value", handleOnlineRoomUpdate);
-      updateOnlineStatus(`Joined Room: ${code}`);
+      updateOnlineStatus(`Joined: ${code}`);
+      configureActionButtonsUI();
     }).catch((e) => {
       updateOnlineStatus("Error joining: " + e.message);
     });
   }).catch((e) => {
-    updateOnlineStatus("Database fetch error: " + e.message);
+    updateOnlineStatus("Fetch error: " + e.message);
   });
 }
 
 function handleOnlineRoomUpdate(snapshot) {
   const room = snapshot.val();
   if (!room) {
-    updateGameStatusMessage("The host closed this online room.");
+    updateGameStatusMessage("Room was closed by opponent.");
     disconnectFromOnlineRoom();
     resetGameEngine(true);
+    configureActionButtonsUI();
     return;
   }
 
-  // Update scores in real-time
+  currentRound = room.roundNumber || 1;
   stats.wins = room.scoreX || 0;
   stats.losses = room.scoreO || 0;
   stats.draws = room.drawsCount || 0;
   updateStatsUI();
 
-  // Sync board representation
+  // Sync board array
   if (room.board) {
     boardState = room.board.map(val => val === "EMPTY" ? "" : val);
     renderBoardUI();
@@ -667,27 +718,37 @@ function handleOnlineRoomUpdate(snapshot) {
 
   currentTurn = room.currentTurn || "X";
 
-  // Hide or configure coin toss panel
-  const coinTossCard = document.querySelector(".coin-toss-wrapper");
-  const tossBtn = document.getElementById("btn-toss-coin");
+  // Check if both players requested rematch
+  if (room.rematchX && room.rematchO) {
+    if (playerSymbol === "X") {
+      // Host resets the room in Firebase matching app's resetRoomForRematch flow
+      roomRef.update({
+        board: Array(9).fill("EMPTY"),
+        currentTurn: "X", // Android app defaults back to starting X
+        status: "ACTIVE",
+        winnerSymbol: "EMPTY",
+        rematchX: false,
+        rematchO: false,
+        roundNumber: currentRound + 1
+      });
+    }
+  }
 
+  // Handle room status sync
   if (room.status === "WAITING") {
-    updateOnlineStatus(`Hosting Room: ${room.roomId}`);
-    updateGameStatusMessage("Waiting for an opponent to join...");
+    updateOnlineStatus(`Hosting Code: ${room.roomId}`);
+    updateGameStatusMessage("Waiting for player to join...");
     isGameActive = false;
     enableCells(false);
-    
-    if (tossBtn) tossBtn.disabled = true;
   } 
   else if (room.status === "ACTIVE") {
-    updateOnlineStatus(`Room: ${room.roomId} | Connected`);
-    
-    // Check if game is playable (if currentTurn and board elements are set)
+    updateOnlineStatus(`Connected | Room: ${room.roomId}`);
     isGameActive = true;
+    rematchRequested = false;
 
-    // If turn is set in Firebase, let the turn-owner play
+    // Check X or O turn
     if (currentTurn === playerSymbol) {
-      updateGameStatusMessage(`It's your turn (${playerSymbol})! Make a move.`);
+      updateGameStatusMessage(`Your turn (${playerSymbol})! Make a move.`);
       enableCells(true);
     } else {
       const oppName = playerSymbol === "X" 
@@ -697,40 +758,14 @@ function handleOnlineRoomUpdate(snapshot) {
       enableCells(false);
     }
 
-    // Configure Coin Toss display based on hosting role
-    if (coinTossCard) {
-      if (playerSymbol === "X") {
-        // Host gets to toss if they haven't yet (board is completely empty)
-        const isBoardEmpty = boardState.every(c => c === "");
-        if (isBoardEmpty) {
-          coinTossCard.style.display = "flex";
-          if (tossBtn) {
-            tossBtn.disabled = false;
-            tossBtn.textContent = "Flip Coin for First Move";
-          }
-        } else {
-          coinTossCard.style.display = "none";
-        }
-      } else {
-        // Guest waits for Host to toss
-        const isBoardEmpty = boardState.every(c => c === "");
-        if (isBoardEmpty) {
-          coinTossCard.style.display = "flex";
-          if (tossBtn) {
-            tossBtn.disabled = true;
-            tossBtn.textContent = "Waiting for host to flip coin...";
-          }
-        } else {
-          coinTossCard.style.display = "none";
-        }
-      }
-    }
+    // Hide rematch button if match is active
+    configureActionButtonsUI();
   } 
   else if (room.status === "WON") {
     isGameActive = false;
     enableCells(false);
 
-    // Render winning line locally
+    // Strike combination
     const check = checkWinCondition(boardState);
     if (check.win) {
       const strikeLine = document.getElementById("winning-strike-line");
@@ -741,23 +776,22 @@ function handleOnlineRoomUpdate(snapshot) {
 
     const winner = room.winnerSymbol;
     if (winner === playerSymbol) {
-      updateGameStatusMessage(`🎉 YOU WON THE MATCH!`);
+      updateGameStatusMessage(`🎉 Match Won!`);
     } else {
-      updateGameStatusMessage(`💀 Opponent won!`);
+      updateGameStatusMessage(`💀 Match Lost! Winner: ${winner}`);
     }
 
-    if (playerSymbol === "X") {
-      setTimeout(resetOnlineRoom, 4000); // Host triggers auto-reset
-    }
+    // Sync rematch requests
+    rematchRequested = playerSymbol === "X" ? room.rematchX : room.rematchO;
+    configureActionButtonsUI();
   } 
   else if (room.status === "DRAW") {
     isGameActive = false;
     enableCells(false);
-    updateGameStatusMessage(`🤝 It's a draw!`);
-    
-    if (playerSymbol === "X") {
-      setTimeout(resetOnlineRoom, 4000); // Host triggers auto-reset
-    }
+    updateGameStatusMessage(`🤝 Match Draw!`);
+
+    rematchRequested = playerSymbol === "X" ? room.rematchX : room.rematchO;
+    configureActionButtonsUI();
   }
 }
 
@@ -767,62 +801,81 @@ function makeOnlineMove(index) {
   boardState[index] = playerSymbol;
   renderBoardUI();
 
-  const dbBoard = boardState.map(val => val === "" ? "EMPTY" : val);
+  const newBoard = boardState.map(val => val === "" ? "EMPTY" : val);
   const nextTurn = playerSymbol === "X" ? "O" : "X";
 
-  const check = checkWinCondition(boardState);
-  let statusUpdate = "ACTIVE";
-  let winnerSymbolUpdate = "EMPTY";
-  let scoreXUpdate = stats.wins;
-  let scoreOUpdate = stats.losses;
-  let drawsUpdate = stats.draws;
-
-  if (check.win) {
-    statusUpdate = "WON";
-    winnerSymbolUpdate = playerSymbol;
-    if (playerSymbol === "X") scoreXUpdate++;
-    else scoreOUpdate++;
-  } else if (check.draw) {
-    statusUpdate = "DRAW";
-    winnerSymbolUpdate = "DRAW";
-    drawsUpdate++;
-  }
-
-  // Sync to database
+  // Temporarily post turn/move to Firebase
   roomRef.update({
-    board: dbBoard,
-    currentTurn: nextTurn,
-    status: statusUpdate,
-    winnerSymbol: winnerSymbolUpdate,
-    scoreX: scoreXUpdate,
-    scoreO: scoreOUpdate,
-    drawsCount: drawsUpdate
+    board: newBoard,
+    currentTurn: nextTurn
+  }).then(() => {
+    // The player who made the move evaluates the result (matches OnlineGameViewModel.kt)
+    const check = checkWinCondition(boardState);
+    
+    if (check.win) {
+      const targetRoomRef = database.ref("rooms/" + onlineRoomId);
+      targetRoomRef.once("value").then((snapshot) => {
+        const room = snapshot.val();
+        if (room) {
+          const finalScoreX = (playerSymbol === "X") ? (room.scoreX || 0) + 1 : (room.scoreX || 0);
+          const finalScoreO = (playerSymbol === "O") ? (room.scoreO || 0) + 1 : (room.scoreO || 0);
+          
+          roomRef.update({
+            status: "WON",
+            winnerSymbol: playerSymbol,
+            scoreX: finalScoreX,
+            scoreO: finalScoreO,
+            drawsCount: room.drawsCount || 0
+          });
+        }
+      });
+    } else if (check.draw) {
+      const targetRoomRef = database.ref("rooms/" + onlineRoomId);
+      targetRoomRef.once("value").then((snapshot) => {
+        const room = snapshot.val();
+        if (room) {
+          roomRef.update({
+            status: "DRAW",
+            winnerSymbol: "DRAW",
+            scoreX: room.scoreX || 0,
+            scoreO: room.scoreO || 0,
+            drawsCount: (room.drawsCount || 0) + 1
+          });
+        }
+      });
+    }
   });
 }
 
-function resetOnlineRoom() {
-  if (roomRef && playerSymbol === "X") {
-    // Host swaps the starting player for the next round
-    const nextStartTurn = firstPlayer === "X" ? "O" : "X";
-    firstPlayer = nextStartTurn;
+function requestOnlineRematch() {
+  if (!roomRef || rematchRequested) return;
 
-    roomRef.update({
-      board: Array(9).fill("EMPTY"),
-      currentTurn: nextStartTurn,
-      status: "ACTIVE",
-      winnerSymbol: "EMPTY",
-      rematchX: false,
-      rematchO: false
-    });
-  }
+  rematchRequested = true;
+  configureActionButtonsUI();
+  updateGameStatusMessage("Waiting for opponent rematch request...");
+
+  const updateKey = playerSymbol === "X" ? "rematchX" : "rematchO";
+  roomRef.child(updateKey).setValue(true);
 }
 
-function disconnectFromOnlineRoom() {
+function leaveOnlineRoom() {
+  leaveOnlineRoomQuietly();
+}
+
+function leaveOnlineRoomQuietly() {
   if (roomRef) {
+    if (playerSymbol === "X") {
+      roomRef.remove(); // Host deletes room node
+    }
     roomRef.off();
     roomRef = null;
   }
   onlineRoomId = "";
   isOnlineMatch = false;
+  rematchRequested = false;
   updateOnlineStatus("");
+}
+
+function disconnectFromOnlineRoom() {
+  leaveOnlineRoomQuietly();
 }
