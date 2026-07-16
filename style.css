@@ -595,7 +595,29 @@ footer {
   }
 }
 
-@keyframes strike-line {
+@keyframes strike-line-horiz {
+  from {
+    width: 0%;
+    opacity: 0;
+  }
+  to {
+    width: 90%;
+    opacity: 1;
+  }
+}
+
+@keyframes strike-line-vert {
+  from {
+    height: 0%;
+    opacity: 0;
+  }
+  to {
+    height: 90%;
+    opacity: 1;
+  }
+}
+
+@keyframes strike-line-diag {
   from {
     width: 0%;
     opacity: 0;
@@ -937,17 +959,20 @@ footer {
 
 .mock-line.active {
   display: block;
-  animation: strike-line 0.5s forwards cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.mock-line.horiz-1 { top: calc(16.66% - 3px); left: 5%; width: 90%; height: 6px; }
-.mock-line.horiz-2 { top: calc(50% - 3px); left: 5%; width: 90%; height: 6px; }
-.mock-line.horiz-3 { top: calc(83.33% - 3px); left: 5%; width: 90%; height: 6px; }
-.mock-line.vert-1 { left: calc(16.66% - 3px); top: 5%; height: 90%; width: 6px; }
-.mock-line.vert-2 { left: calc(50% - 3px); top: 5%; height: 90%; width: 6px; }
-.mock-line.vert-3 { left: calc(83.33% - 3px); top: 5%; height: 90%; width: 6px; }
-.mock-line.diag-1 { top: 50%; left: -10%; width: 120%; height: 6px; transform: rotate(45deg); transform-origin: center; }
-.mock-line.diag-2 { top: 50%; left: -10%; width: 120%; height: 6px; transform: rotate(-45deg); transform-origin: center; }
+.mock-line.horiz-1, .mock-line.horiz-2, .mock-line.horiz-3 { height: 6px; animation: strike-line-horiz 0.4s forwards cubic-bezier(0.4, 0, 0.2, 1); }
+.mock-line.vert-1, .mock-line.vert-2, .mock-line.vert-3 { width: 6px; animation: strike-line-vert 0.4s forwards cubic-bezier(0.4, 0, 0.2, 1); }
+.mock-line.diag-1, .mock-line.diag-2 { height: 6px; animation: strike-line-diag 0.4s forwards cubic-bezier(0.4, 0, 0.2, 1); }
+
+.mock-line.horiz-1 { top: calc(16.66% - 3px); left: 5%; }
+.mock-line.horiz-2 { top: calc(50% - 3px); left: 5%; }
+.mock-line.horiz-3 { top: calc(83.33% - 3px); left: 5%; }
+.mock-line.vert-1 { left: calc(16.66% - 3px); top: 5%; }
+.mock-line.vert-2 { left: calc(50% - 3px); top: 5%; }
+.mock-line.vert-3 { left: calc(83.33% - 3px); top: 5%; }
+.mock-line.diag-1 { top: 50%; left: -10%; transform: rotate(45deg); transform-origin: center; }
+.mock-line.diag-2 { top: 50%; left: -10%; transform: rotate(-45deg); transform-origin: center; }
 
 @media (max-width: 900px) {
   .game-dashboard {
