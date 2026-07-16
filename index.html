@@ -1,206 +1,232 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Privacy Policy - Tic Tac Toe: Online & Local</title>
-    <style>
-        :root {
-            --primary: #3F51B5;
-            --primary-light: #E8EAF6;
-            --text-dark: #2C3E50;
-            --text-muted: #7F8C8D;
-            --bg-light: #F8F9FA;
-            --card-bg: #FFFFFF;
-            --border-color: #E2E8F0;
-        }
-
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --primary: #5C6BC0;
-                --primary-light: #1A237E;
-                --text-dark: #F1F5F9;
-                --text-muted: #94A3B8;
-                --bg-light: #0F172A;
-                --card-bg: #1E293B;
-                --border-color: #334155;
-            }
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            line-height: 1.6;
-            color: var(--text-dark);
-            background-color: var(--bg-light);
-            margin: 0;
-            padding: 0;
-            transition: background-color 0.3s, color 0.3s;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
-
-        .card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 40px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-        }
-
-        h1 {
-            font-size: 2.2rem;
-            color: var(--primary);
-            margin-top: 0;
-            margin-bottom: 8px;
-            font-weight: 800;
-        }
-
-        .subtitle {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-            margin-bottom: 30px;
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 15px;
-        }
-
-        h2 {
-            font-size: 1.4rem;
-            color: var(--primary);
-            margin-top: 30px;
-            margin-bottom: 15px;
-            font-weight: 600;
-        }
-
-        p, li {
-            font-size: 1rem;
-            color: var(--text-dark);
-            opacity: 0.9;
-        }
-
-        ul {
-            padding-left: 20px;
-            margin-bottom: 20px;
-        }
-
-        li {
-            margin-bottom: 8px;
-        }
-
-        .highlight-box {
-            background-color: var(--primary-light);
-            border-left: 4px solid var(--primary);
-            padding: 15px 20px;
-            border-radius: 4px 12px 12px 4px;
-            margin: 20px 0;
-        }
-
-        .highlight-box p {
-            margin: 0;
-            font-weight: 500;
-        }
-
-        a {
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
-
-        .footer {
-            text-align: center;
-            margin-top: 40px;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-        }
-
-        @media (max-width: 600px) {
-            .container {
-                margin: 20px auto;
-            }
-            .card {
-                padding: 24px;
-                border-radius: 12px;
-            }
-            h1 {
-                font-size: 1.8rem;
-            }
-            h2 {
-                font-size: 1.2rem;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tic Tac Toe: Online & Local - Play with Friends & Smart AI</title>
+  <meta name="description" content="Play the ultimate Tic Tac Toe game online with friends via room codes, local pass & play, or challenge the smart AI. Customise with 5 vibrant themes, board colors and avatars.">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="container">
-    <div class="card">
-        <h1>Privacy Policy</h1>
-        <div class="subtitle">Last Updated: July 6, 2026</div>
-
-        <p>This privacy policy governs your use of the software application <strong>Tic Tac Toe: Online & Local</strong> ("Application") for mobile devices, which was created as a clean, offline-friendly, and online matchmaking multiplayer board game.</p>
-
-        <h2>1. Information Collection and Use</h2>
-        <p>We believe in absolute transparency and user privacy. The Application is designed so that you can play without registering an account or providing any personally identifiable information (PII).</p>
-
-        <h3>A. Offline & Local Play Modes</h3>
-        <p>When playing in <strong>Player vs AI</strong> or <strong>Local Pass & Play</strong> modes:</p>
+  <!-- Header -->
+  <header>
+    <div class="container">
+      <a href="#" class="logo">
+        <span class="logo-icon">X</span>
+        <span>Tic Tac Toe</span>
+      </a>
+      <nav>
         <ul>
-            <li>No personal data is collected or transmitted outside of your device.</li>
-            <li>Custom nicknames, selected avatars, board settings, and game statistics are stored locally on your device using Android Jetpack DataStore (Preferences).</li>
+          <li><a href="#" class="active">Home</a></li>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#how-to-play">How to Play</a></li>
+          <li><a href="privacy.html">Privacy Policy</a></li>
         </ul>
+      </nav>
+    </div>
+  </header>
 
-        <h3>B. Online Multiplayer Mode</h3>
-        <p>When you choose to play in <strong>Online Multiplayer</strong> mode, the Application uses third-party cloud services to synchronize the gameplay in real-time. In this mode, we process:</p>
-        <ul>
-            <li><strong>Room Codes:</strong> A temporary, randomly generated 6-digit number to connect you with your game partner.</li>
-            <li><strong>Temporary Nicknames & Avatars:</strong> The player names and avatar emojis you choose to identify yourself in the game room.</li>
-            <li><strong>Game Actions:</strong> The coordinates of the squares you tap on the 3x3 board during the game session.</li>
-        </ul>
-        <div class="highlight-box">
-            <p><strong>Note:</strong> All online match information is transient and stored temporarily to facilitate active matchmaking. We do not link this data to your personal identity, device identifiers, or social accounts.</p>
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <span class="hero-tag">Android App & Multiplayer Game</span>
+        <h1>The Ultimate <span class="gradient-text">Tic Tac Toe</span> Experience</h1>
+        <p class="hero-desc">Play locally with a friend, challenge our smart adaptive AI, or match with players worldwide using simple 6-digit room codes. Completely free, customizable, and ads-friendly.</p>
+        <div class="hero-actions">
+          <a href="#download" class="btn btn-primary">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
+            Download APK
+          </a>
+          <a href="#features" class="btn btn-secondary">Explore Features</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Feature Grid Section -->
+  <section id="features" class="features">
+    <div class="container">
+      <h2 class="section-title">Packed with Amazing Features</h2>
+      <p class="section-desc">We've redesigned the traditional Tic Tac Toe game from the ground up with features that make gameplay engaging and personalized.</p>
+      
+      <div class="feature-grid">
+        <!-- Feature 1 -->
+        <div class="feature-card primary">
+          <div class="feature-icon-wrapper">🌐</div>
+          <h3>Online Multiplayer</h3>
+          <p>Instantly host or join games with friends and family using a secure 6-digit room code. Low latency and reliable sync ensure smooth gameplay anywhere.</p>
         </div>
 
-        <h2>2. Third-Party Services</h2>
-        <p>To enable online multiplayer features and match synchronization, the Application utilizes service providers that may collect information used to identify you. You can read the privacy policies of these providers below:</p>
-        <ul>
-            <li><a href="https://www.google.com/policies/privacy/" target="_blank" rel="noopener noreferrer">Google Play Services</a></li>
-            <li><a href="https://firebase.google.com/support/privacy" target="_blank" rel="noopener noreferrer">Google Firebase (Realtime Database / Firestore)</a></li>
-        </ul>
+        <!-- Feature 2 -->
+        <div class="feature-card secondary">
+          <div class="feature-icon-wrapper">🤖</div>
+          <h3>Smart AI Challenges</h3>
+          <p>No internet? No problem. Test your strategic skills against a smart computer opponent with 3 adjustable difficulty levels: Easy, Medium, and Hard.</p>
+        </div>
 
-        <h2>3. Device Permissions Required</h2>
-        <p>The Application requests the following basic permissions on your device to function correctly:</p>
-        <ul>
-            <li><strong>INTERNET:</strong> Required to establish connection to Firebase servers for online multiplayer matchmaking and real-time syncing.</li>
-            <li><strong>VIBRATE:</strong> Used to offer haptic feedback (vibrations) on grid interactions and victory celebrations, enhancing immersion.</li>
-            <li><strong>ACCESS_NETWORK_STATE & ACCESS_WIFI_STATE:</strong> Used to check if your device has an active internet connection before starting online rooms, ensuring a smooth experience.</li>
-        </ul>
+        <!-- Feature 3 -->
+        <div class="feature-card accent">
+          <div class="feature-icon-wrapper">🪙</div>
+          <h3>Animated Coin Toss</h3>
+          <p>Decide who gets the first move fairly with an interactive, animated coin flip before every match. Adds a thrilling start to every game!</p>
+        </div>
 
-        <h2>4. Data Retention and Safety</h2>
-        <p>Because we do not collect personal identifiers or maintain user accounts, we do not store your personal information on any database. All local preferences (like stats, volume, theme, and colors) are stored directly on your physical device. You can erase this data at any time by clearing the Application's cache/storage in your device's settings or by uninstalling the Application.</p>
+        <!-- Feature 4 -->
+        <div class="feature-card secondary">
+          <div class="feature-icon-wrapper">🎭</div>
+          <h3>Custom Profiles</h3>
+          <p>Express yourself! Choose from 6 unique designed avatars (🦊, 🤖, 🦁, 🐼, 👾, 🦄) and set your custom nickname for local and online visibility.</p>
+        </div>
 
-        <h2>5. Children's Privacy</h2>
-        <p>The Application is fully suitable for children and does not knowingly collect or request personal information from children under the age of 13. The game contains no advertisements, chat features, or in-app purchases, making it a safe environment for all ages.</p>
+        <!-- Feature 5 -->
+        <div class="feature-card accent">
+          <div class="feature-icon-wrapper">🎨</div>
+          <h3>Personalised Themes</h3>
+          <p>Match your mood with 5 gorgeous UI color themes (Cyan, Pink, Green, Gold, Red) and board customization with full native dark mode support.</p>
+        </div>
 
-        <h2>6. Changes to This Privacy Policy</h2>
-        <p>We may update our Privacy Policy from time to time. Thus, you are advised to review this page periodically for any changes. We will notify you of any changes by posting the new Privacy Policy on this page.</p>
+        <!-- Feature 6 -->
+        <div class="feature-card primary">
+          <div class="feature-icon-wrapper">📊</div>
+          <h3>Lifetime Statistics</h3>
+          <p>Keep track of your wins, losses, draws, and general gameplay patterns. See your progress and check how your skills stack up over time.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-        <h2>7. Contact Us</h2>
-        <p>If you have any questions or suggestions about this Privacy Policy, do not hesitate to contact us at:</p>
-        <p><strong>Email:</strong> <a href="mailto:info.nitish1997@gmail.com">info.nitish1997@gmail.com</a></p>
+  <!-- Interactive Board Preview -->
+  <section class="game-preview">
+    <div class="container">
+      <div class="preview-container">
         
-    </div>
+        <!-- Text details -->
+        <div class="preview-text">
+          <span class="hero-tag" style="background: rgba(0, 240, 255, 0.1); color: var(--color-primary); border-color: rgba(0, 240, 255, 0.2);">Interactive Interface</span>
+          <h2 style="font-size: 2.5rem; margin-top: 15px;">Tailor-Made Gaming UI</h2>
+          <p style="color: var(--text-muted); margin-top: 15px;">Enjoy a beautiful, tactile experience with modern haptic feedback, fluid animations, and customized designs.</p>
+          
+          <ul class="preview-list">
+            <li>
+              <div class="preview-list-icon">✓</div>
+              <div>
+                <strong>Custom Avatars & Nicknames</strong>
+                <p style="font-size: 0.9rem; color: var(--text-muted);">Choose your persona instantly before joining the lobby.</p>
+                <div class="avatars-preview">
+                  <div class="avatar-bubble">🦊</div>
+                  <div class="avatar-bubble">🤖</div>
+                  <div class="avatar-bubble">🦁</div>
+                  <div class="avatar-bubble">🐼</div>
+                  <div class="avatar-bubble">👾</div>
+                  <div class="avatar-bubble">🦄</div>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div class="preview-list-icon">✓</div>
+              <div>
+                <strong>Vibrant Board UI & Themes</strong>
+                <p style="font-size: 0.9rem; color: var(--text-muted);">Quickly switch between 5 premium color accents to fit your style.</p>
+                <div class="theme-swatches">
+                  <div class="theme-swatch swatch-1"></div>
+                  <div class="theme-swatch swatch-2"></div>
+                  <div class="theme-swatch swatch-3"></div>
+                  <div class="theme-swatch swatch-4"></div>
+                  <div class="theme-swatch swatch-5"></div>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
 
-    <div class="footer">
-        &copy; 2026 Tic Tac Toe Clean Edition. All rights reserved.
+        <!-- Visual Board Mock -->
+        <div class="preview-visual">
+          <div class="mock-board">
+            <div class="mock-cell x">X</div>
+            <div class="mock-cell o">O</div>
+            <div class="mock-cell x">X</div>
+            
+            <div class="mock-cell o">O</div>
+            <div class="mock-cell x">X</div>
+            <div class="mock-cell"></div>
+            
+            <div class="mock-cell o">O</div>
+            <div class="mock-cell"></div>
+            <div class="mock-cell x">X</div>
+            
+            <!-- Diagonal strike-through -->
+            <div class="mock-line diagonal"></div>
+          </div>
+        </div>
+
+      </div>
     </div>
-</div>
+  </section>
+
+  <!-- How to Play Section -->
+  <section id="how-to-play" style="padding: 80px 0; border-top: 1px solid var(--surface-border);">
+    <div class="container" style="max-width: 900px; text-align: center;">
+      <h2 class="section-title">How to Play Online</h2>
+      <p class="section-desc">Connect with your friends in three simple steps.</p>
+      
+      <div style="display: flex; gap: 30px; justify-content: space-between; flex-wrap: wrap; margin-top: 40px; text-align: left;">
+        <div style="flex: 1 1 250px; background: var(--surface-color); border: 1px solid var(--surface-border); border-radius: 16px; padding: 30px; position: relative;">
+          <span style="font-size: 3rem; font-weight: 700; color: rgba(0, 240, 255, 0.15); position: absolute; right: 20px; top: 10px; font-family: 'Space Grotesk', sans-serif;">01</span>
+          <h4 style="font-size: 1.2rem; margin-bottom: 12px; color: var(--color-primary);">Create/Join Room</h4>
+          <p style="color: var(--text-muted); font-size: 0.9rem;">Open Multiplayer mode, configure your profile, and choose to "Host" a new room or "Join" an existing one.</p>
+        </div>
+        <div style="flex: 1 1 250px; background: var(--surface-color); border: 1px solid var(--surface-border); border-radius: 16px; padding: 30px; position: relative;">
+          <span style="font-size: 3rem; font-weight: 700; color: rgba(217, 70, 239, 0.15); position: absolute; right: 20px; top: 10px; font-family: 'Space Grotesk', sans-serif;">02</span>
+          <h4 style="font-size: 1.2rem; margin-bottom: 12px; color: var(--color-secondary);">Share Room Code</h4>
+          <p style="color: var(--text-muted); font-size: 0.9rem;">Share the generated 6-digit room code with your friend. They enter it on their device to establish a direct connection.</p>
+        </div>
+        <div style="flex: 1 1 250px; background: var(--surface-color); border: 1px solid var(--surface-border); border-radius: 16px; padding: 30px; position: relative;">
+          <span style="font-size: 3rem; font-weight: 700; color: rgba(139, 92, 246, 0.15); position: absolute; right: 20px; top: 10px; font-family: 'Space Grotesk', sans-serif;">03</span>
+          <h4 style="font-size: 1.2rem; margin-bottom: 12px; color: var(--color-accent);">Flip & Play!</h4>
+          <p style="color: var(--text-muted); font-size: 0.9rem;">The animated coin toss decides who takes the first turn. Place your X or O and block your opponent to win!</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Download Section -->
+  <section id="download" style="padding: 100px 0; background: linear-gradient(180deg, transparent, rgba(0, 240, 255, 0.03), rgba(217, 70, 239, 0.03)); text-align: center;">
+    <div class="container" style="max-width: 700px;">
+      <h2 style="font-size: 3rem; margin-bottom: 20px;">Ready to Play?</h2>
+      <p style="color: var(--text-muted); margin-bottom: 40px; font-size: 1.15rem;">Get the game today. Connect online, challenge the computer, or play locally on your phone.</p>
+      
+      <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+        <!-- Download APK Button -->
+        <a href="#" class="btn btn-primary" style="padding: 16px 40px; font-size: 1.1rem;">
+          Download Android APK
+        </a>
+      </div>
+      <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 15px;">Compatible with Android 7.0 (Nougat) and above</p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <a href="#" class="logo footer-logo">
+          <span class="logo-icon">X</span>
+          <span>Tic Tac Toe</span>
+        </a>
+        <div class="footer-links">
+          <a href="#">Home</a>
+          <a href="#features">Features</a>
+          <a href="#how-to-play">How to Play</a>
+          <a href="privacy.html">Privacy Policy</a>
+        </div>
+      </div>
+      <div class="copyright">
+        &copy; 2026 Tic Tac Toe: Online & Local. All rights reserved.
+      </div>
+    </div>
+  </footer>
 
 </body>
 </html>
