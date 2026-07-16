@@ -137,14 +137,29 @@
                 <div class="game-controls" style="margin-top: 0;">
                   <button class="btn-small active" data-mode="ai">Vs AI</button>
                   <button class="btn-small" data-mode="local">Pass & Play</button>
+                  <button class="btn-small" data-mode="online">Online Room</button>
                 </div>
               </div>
-              <div id="difficulty-container">
-                <strong style="font-size: 0.9rem; color: var(--text-muted); display: block; margin-bottom: 6px;">AI Difficulty:</strong>
-                <div class="game-controls" style="margin-top: 0;">
-                  <button class="btn-small" data-diff="easy">Easy</button>
-                  <button class="btn-small active" data-diff="hard">Hard</button>
-                </div>
+            </div>
+
+            <!-- Online Room Setup Panel (Hidden by default) -->
+            <div id="online-setup-panel" class="online-panel" style="display: none;">
+              <strong style="font-size: 0.9rem; color: var(--color-primary); display: block; margin-bottom: 4px;">Online Multiplayer Room</strong>
+              <div style="display: flex; gap: 10px;">
+                <input type="text" id="room-code-input" class="room-input" placeholder="6-Digit Room Code" maxlength="6">
+              </div>
+              <div style="display: flex; gap: 10px; width: 100%; margin-top: 8px;">
+                <button id="btn-host-room" class="btn-small" style="flex: 1; padding: 10px;">Host Room</button>
+                <button id="btn-join-room" class="btn-small" style="flex: 1; padding: 10px;">Join Room</button>
+              </div>
+              <div id="online-room-status" style="font-size: 0.85rem; color: var(--text-muted); text-align: center; margin-top: 8px; font-weight: 500;"></div>
+            </div>
+
+            <div id="difficulty-container" style="margin-top: 15px;">
+              <strong style="font-size: 0.9rem; color: var(--text-muted); display: block; margin-bottom: 6px;">AI Difficulty:</strong>
+              <div class="game-controls" style="margin-top: 0;">
+                <button class="btn-small" data-diff="easy">Easy</button>
+                <button class="btn-small active" data-diff="hard">Hard</button>
               </div>
             </div>
 
@@ -286,6 +301,9 @@
     </div>
   </footer>
 
+  <!-- Import Firebase SDK Compatibility Libraries -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
   <script src="game.js"></script>
 </body>
 </html>
