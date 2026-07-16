@@ -632,3 +632,288 @@ footer {
     padding: 30px 20px;
   }
 }
+
+/* ==========================================================================
+   Interactive Game Additions (Premium Dashboard Layout)
+   ========================================================================== */
+
+.game-dashboard {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 40px;
+  background: rgba(13, 16, 27, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 28px;
+  padding: 45px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  margin-top: 40px;
+  width: 100%;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.dashboard-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-between;
+}
+
+/* Profile section details */
+.profile-setting-card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 18px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+/* Avatars & Nickname */
+.avatar-bubble {
+  cursor: pointer;
+  user-select: none;
+  font-size: 1.6rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-smooth);
+}
+
+.avatar-bubble:hover {
+  transform: translateY(-4px) scale(1.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.avatar-bubble.selected {
+  border-color: var(--color-primary);
+  box-shadow: var(--glow-shadow-primary);
+  transform: translateY(-5px) scale(1.15);
+  background: rgba(0, 240, 255, 0.12);
+}
+
+.nickname-input-wrapper {
+  margin-top: 20px;
+  width: 100%;
+}
+
+.nickname-input {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--surface-border);
+  color: #fff;
+  padding: 12px 16px;
+  border-radius: 12px;
+  width: 100%;
+  margin-top: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  transition: var(--transition-smooth);
+}
+
+.nickname-input:focus {
+  border-color: var(--color-primary);
+  box-shadow: var(--glow-shadow-primary);
+  background: rgba(255, 255, 255, 0.05);
+  outline: none;
+}
+
+/* Game Controls & Modes */
+.game-controls {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.btn-small {
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600;
+  border: 1px solid var(--surface-border);
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--text-main);
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.btn-small:hover {
+  border-color: var(--color-primary);
+  background: rgba(0, 240, 255, 0.03);
+}
+
+.btn-small.active {
+  background: var(--color-primary);
+  color: #07090e;
+  border-color: var(--color-primary);
+  box-shadow: var(--glow-shadow-primary);
+}
+
+/* Coin Toss Animation */
+.coin-toss-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  padding: 24px;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.coin-container {
+  width: 90px;
+  height: 90px;
+  perspective: 1000px;
+  margin-bottom: 12px;
+}
+
+.coin {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 2s cubic-bezier(0.175, 0.885, 0.32, 1.15);
+}
+
+.coin-side {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  backface-visibility: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.2rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+}
+
+.coin-heads {
+  background: linear-gradient(135deg, #ffd700, #ffa500);
+  color: #fff;
+  border: 3px solid #ffd700;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.coin-tails {
+  background: linear-gradient(135deg, #e5e7eb, #9ca3af);
+  color: #1f2937;
+  border: 3px solid #f3f4f6;
+  transform: rotateY(180deg);
+  text-shadow: 0 1px 2px rgba(255,255,255,0.4);
+}
+
+.coin.flip-heads {
+  transform: rotateY(1800deg);
+}
+
+.coin.flip-tails {
+  transform: rotateY(1980deg);
+}
+
+/* Playable Grid Cells */
+.mock-board {
+  margin: 0 auto;
+}
+
+.mock-cell.playable {
+  cursor: pointer;
+}
+
+.mock-cell.playable:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--color-primary);
+  box-shadow: inset 0 0 15px rgba(0, 240, 255, 0.08);
+}
+
+/* Game Status & Info text */
+.game-status-text {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  text-shadow: var(--glow-shadow-primary);
+  margin-top: 15px;
+  min-height: 27px;
+  text-align: center;
+}
+
+.game-status-text.turn-o {
+  color: var(--color-secondary);
+  text-shadow: var(--glow-shadow-secondary);
+}
+
+/* Stats dashboard styling */
+.stats-dashboard {
+  display: flex;
+  justify-content: space-around;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 16px;
+  margin-top: 20px;
+  width: 100%;
+}
+
+.stat-box {
+  text-align: center;
+}
+
+.stat-val {
+  font-size: 1.6rem;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.stat-label {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 4px;
+}
+
+.stat-box.win .stat-val { color: var(--color-primary); text-shadow: var(--glow-shadow-primary); }
+.stat-box.loss .stat-val { color: var(--color-secondary); text-shadow: var(--glow-shadow-secondary); }
+.stat-box.draw .stat-val { color: var(--text-muted); }
+
+/* Winning Line styles */
+.mock-line {
+  display: none;
+  z-index: 10;
+}
+
+.mock-line.active {
+  display: block;
+  animation: strike-line 0.5s forwards cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mock-line.horiz-1 { top: calc(16.66% - 3px); left: 5%; width: 90%; height: 6px; }
+.mock-line.horiz-2 { top: calc(50% - 3px); left: 5%; width: 90%; height: 6px; }
+.mock-line.horiz-3 { top: calc(83.33% - 3px); left: 5%; width: 90%; height: 6px; }
+.mock-line.vert-1 { left: calc(16.66% - 3px); top: 5%; height: 90%; width: 6px; }
+.mock-line.vert-2 { left: calc(50% - 3px); top: 5%; height: 90%; width: 6px; }
+.mock-line.vert-3 { left: calc(83.33% - 3px); top: 5%; height: 90%; width: 6px; }
+.mock-line.diag-1 { top: 50%; left: -10%; width: 120%; height: 6px; transform: rotate(45deg); transform-origin: center; }
+.mock-line.diag-2 { top: 50%; left: -10%; width: 120%; height: 6px; transform: rotate(-45deg); transform-origin: center; }
+
+@media (max-width: 900px) {
+  .game-dashboard {
+    grid-template-columns: 1fr;
+    padding: 25px;
+    gap: 30px;
+  }
+}
+
+

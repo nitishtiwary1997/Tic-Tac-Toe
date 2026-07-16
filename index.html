@@ -98,66 +98,124 @@
   </section>
 
   <!-- Interactive Board Preview -->
+  <!-- Interactive Board Preview -->
   <section class="game-preview">
-    <div class="container">
-      <div class="preview-container">
+    <div class="container" style="text-align: center;">
+      <span class="hero-tag" style="background: rgba(0, 240, 255, 0.1); color: var(--color-primary); border-color: rgba(0, 240, 255, 0.2);">Interactive Interface</span>
+      <h2 style="font-size: 2.8rem; margin-top: 15px;">Play the Game Right Here!</h2>
+      <p style="color: var(--text-muted); max-width: 600px; margin: 15px auto 40px;">Experience the complete flow of the app directly in your browser. Choose settings, flip the coin, and test your strategy against our AI.</p>
+
+      <div class="game-dashboard">
         
-        <!-- Text details -->
-        <div class="preview-text">
-          <span class="hero-tag" style="background: rgba(0, 240, 255, 0.1); color: var(--color-primary); border-color: rgba(0, 240, 255, 0.2);">Interactive Interface</span>
-          <h2 style="font-size: 2.5rem; margin-top: 15px;">Tailor-Made Gaming UI</h2>
-          <p style="color: var(--text-muted); margin-top: 15px;">Enjoy a beautiful, tactile experience with modern haptic feedback, fluid animations, and customized designs.</p>
-          
-          <ul class="preview-list">
-            <li>
-              <div class="preview-list-icon">✓</div>
+        <!-- Left Panel: Profile & Setup -->
+        <div class="dashboard-panel">
+          <div class="profile-setting-card">
+            <h3 style="font-size: 1.25rem; margin-bottom: 15px; color: var(--color-primary);">1. Profile Settings</h3>
+            
+            <strong style="font-size: 0.9rem; color: var(--text-muted); display: block; margin-bottom: 8px;">Select Avatar:</strong>
+            <div class="avatars-preview" style="margin-top: 0; justify-content: flex-start;">
+              <div class="avatar-bubble">🦊</div>
+              <div class="avatar-bubble">🤖</div>
+              <div class="avatar-bubble">🦁</div>
+              <div class="avatar-bubble">🐼</div>
+              <div class="avatar-bubble">👾</div>
+              <div class="avatar-bubble">🦄</div>
+            </div>
+
+            <div class="nickname-input-wrapper">
+              <label for="player-nickname" style="font-size: 0.9rem; color: var(--text-muted); font-weight: 500;">Set Nickname:</label>
+              <input type="text" id="player-nickname" class="nickname-input" placeholder="Enter nickname..." value="Player 1">
+            </div>
+          </div>
+
+          <div class="profile-setting-card" style="margin-bottom: 0;">
+            <h3 style="font-size: 1.25rem; margin-bottom: 15px; color: var(--color-secondary);">2. Game Configuration</h3>
+            
+            <div style="display: flex; gap: 20px; flex-wrap: wrap;">
               <div>
-                <strong>Custom Avatars & Nicknames</strong>
-                <p style="font-size: 0.9rem; color: var(--text-muted);">Choose your persona instantly before joining the lobby.</p>
-                <div class="avatars-preview">
-                  <div class="avatar-bubble">🦊</div>
-                  <div class="avatar-bubble">🤖</div>
-                  <div class="avatar-bubble">🦁</div>
-                  <div class="avatar-bubble">🐼</div>
-                  <div class="avatar-bubble">👾</div>
-                  <div class="avatar-bubble">🦄</div>
+                <strong style="font-size: 0.9rem; color: var(--text-muted); display: block; margin-bottom: 6px;">Game Mode:</strong>
+                <div class="game-controls" style="margin-top: 0;">
+                  <button class="btn-small active" data-mode="ai">Vs AI</button>
+                  <button class="btn-small" data-mode="local">Pass & Play</button>
                 </div>
               </div>
-            </li>
-            <li>
-              <div class="preview-list-icon">✓</div>
-              <div>
-                <strong>Vibrant Board UI & Themes</strong>
-                <p style="font-size: 0.9rem; color: var(--text-muted);">Quickly switch between 5 premium color accents to fit your style.</p>
-                <div class="theme-swatches">
-                  <div class="theme-swatch swatch-1"></div>
-                  <div class="theme-swatch swatch-2"></div>
-                  <div class="theme-swatch swatch-3"></div>
-                  <div class="theme-swatch swatch-4"></div>
-                  <div class="theme-swatch swatch-5"></div>
+              <div id="difficulty-container">
+                <strong style="font-size: 0.9rem; color: var(--text-muted); display: block; margin-bottom: 6px;">AI Difficulty:</strong>
+                <div class="game-controls" style="margin-top: 0;">
+                  <button class="btn-small" data-diff="easy">Easy</button>
+                  <button class="btn-small active" data-diff="hard">Hard</button>
                 </div>
               </div>
-            </li>
-          </ul>
+            </div>
+
+            <div style="margin-top: 20px;">
+              <strong style="font-size: 0.9rem; color: var(--text-muted); display: block; margin-bottom: 8px;">Switch Website Theme Accent:</strong>
+              <div class="theme-swatches" style="margin-top: 0; justify-content: flex-start;">
+                <div class="theme-swatch swatch-1"></div>
+                <div class="theme-swatch swatch-2"></div>
+                <div class="theme-swatch swatch-3"></div>
+                <div class="theme-swatch swatch-4"></div>
+                <div class="theme-swatch swatch-5"></div>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <!-- Visual Board Mock -->
-        <div class="preview-visual">
-          <div class="mock-board">
-            <div class="mock-cell x">X</div>
-            <div class="mock-cell o">O</div>
-            <div class="mock-cell x">X</div>
-            
-            <div class="mock-cell o">O</div>
-            <div class="mock-cell x">X</div>
-            <div class="mock-cell"></div>
-            
-            <div class="mock-cell o">O</div>
-            <div class="mock-cell"></div>
-            <div class="mock-cell x">X</div>
-            
-            <!-- Diagonal strike-through -->
-            <div class="mock-line diagonal"></div>
+        <!-- Right Panel: Coin Flip & Board -->
+        <div class="dashboard-panel" style="align-items: center;">
+          <div class="coin-toss-wrapper" style="margin-top: 0;">
+            <h3 style="font-size: 1.1rem; margin-bottom: 12px; font-weight: 600; color: var(--text-main);">Animated Coin Toss</h3>
+            <div class="coin-container">
+              <div id="game-coin" class="coin">
+                <div class="coin-side coin-heads">X</div>
+                <div class="coin-side coin-tails">O</div>
+              </div>
+            </div>
+            <button id="btn-toss-coin" class="btn-small active" style="padding: 10px 24px; font-size: 0.9rem; box-shadow: var(--glow-shadow-primary);">Flip Coin to Play</button>
+          </div>
+
+          <div style="margin-top: 25px; display: flex; flex-direction: column; align-items: center; width: 100%;">
+            <div class="mock-board">
+              <div class="mock-cell" data-index="0"></div>
+              <div class="mock-cell" data-index="1"></div>
+              <div class="mock-cell" data-index="2"></div>
+              
+              <div class="mock-cell" data-index="3"></div>
+              <div class="mock-cell" data-index="4"></div>
+              <div class="mock-cell" data-index="5"></div>
+              
+              <div class="mock-cell" data-index="6"></div>
+              <div class="mock-cell" data-index="7"></div>
+              <div class="mock-cell" data-index="8"></div>
+              
+              <!-- Winning Strike Line -->
+              <div id="winning-strike-line" class="mock-line"></div>
+            </div>
+
+            <!-- Status indicator -->
+            <div id="game-status-label" class="game-status-text">Choose your mode/profile, then click 'Flip Coin' to start!</div>
+
+            <!-- Statistics -->
+            <div class="stats-dashboard">
+              <div class="stat-box win">
+                <div id="stat-wins" class="stat-val">0</div>
+                <div class="stat-label">Wins</div>
+              </div>
+              <div class="stat-box draw">
+                <div id="stat-draws" class="stat-val">0</div>
+                <div class="stat-label">Draws</div>
+              </div>
+              <div class="stat-box loss">
+                <div id="stat-losses" class="stat-val">0</div>
+                <div class="stat-label">Losses</div>
+              </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="game-actions-wrapper">
+              <button id="btn-reset-game" class="btn-small">Reset Board</button>
+              <button id="btn-reset-stats" class="btn-small" style="opacity: 0.7;">Reset Stats</button>
+            </div>
           </div>
         </div>
 
@@ -228,5 +286,6 @@
     </div>
   </footer>
 
+  <script src="game.js"></script>
 </body>
 </html>
