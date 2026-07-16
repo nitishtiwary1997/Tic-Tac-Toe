@@ -86,7 +86,7 @@ const WINNING_COMBINATIONS = [
   { combo: [2, 4, 6], class: "diag-2" }
 ];
 
-document.addEventListener("DOMContentLoaded", () => {
+function runInitializations() {
   initFirebase();
   initThemeSwitcher();
   initAvatarSelector();
@@ -95,7 +95,13 @@ document.addEventListener("DOMContentLoaded", () => {
   initCoinToss();
   initGameBoard();
   resetGameEngine(true);
-});
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", runInitializations);
+} else {
+  runInitializations();
+}
 
 // Initialize Firebase
 function initFirebase() {
@@ -280,26 +286,36 @@ function initGameControls() {
     });
   }
 
-  // Setup panel choices toggling logic
-  const createChoiceBtn = document.getElementById("btn-create-room-choice");
+  // Setup panel choices toggling logic (Resilient to both old and new layouts)
+  const createChoiceBtn = document.getElementById("btn-create-room-choice") || document.getElementById("btn-host-room");
   if (createChoiceBtn) {
     createChoiceBtn.addEventListener("click", () => {
       const choiceContainer = document.getElementById("online-choice-container");
       const hostContainer = document.getElementById("online-host-container");
-      if (choiceContainer) choiceContainer.style.display = "none";
-      if (hostContainer) hostContainer.style.display = "flex";
+      
+      if (choiceContainer && hostContainer) {
+        choiceContainer.style.display = "none";
+        hostContainer.style.display = "flex";
+      }
+      
       hostOnlineRoom();
     });
   }
 
-  const joinChoiceBtn = document.getElementById("btn-join-room-choice");
+  const joinChoiceBtn = document.getElementById("btn-join-room-choice") || document.getElementById("btn-join-room");
   if (joinChoiceBtn) {
     joinChoiceBtn.addEventListener("click", () => {
       const choiceContainer = document.getElementById("online-choice-container");
       const joinContainer = document.getElementById("online-join-container");
-      if (choiceContainer) choiceContainer.style.display = "none";
-      if (joinContainer) joinContainer.style.display = "flex";
-      updateOnlineStatus("Enter 6-digit room code to join.");
+      
+      if (choiceContainer && joinContainer) {
+        choiceContainer.style.display = "none";
+        joinContainer.style.display = "flex";
+        updateOnlineStatus("Enter 6-digit room code to join.");
+      } else {
+        // Fallback for old layout where code input is always visible
+        joinOnlineRoom();
+      }
     });
   }
 
